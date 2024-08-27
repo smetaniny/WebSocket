@@ -1,6 +1,5 @@
 ```
 /src
-/src
 ├── /Config
 │   └── websockets.php                    // Конфигурации для WebSocket
 ├── /Interfaces
@@ -15,10 +14,8 @@
 │   ├── /WebSocket
 │   │   ├── WebSocketControllerInterface.php   // Интерфейс для контроллера WebSocket (Интерфейс)
 │   │   └── WebSocketAuthInterface.php          // Интерфейс для аутентификации WebSocket (Стратегия)
-│   ├── /Notifications
-│   │   ├── NotificationChannelInterface.php     // Интерфейс для каналов уведомлений (Стратегия)
-│   │   ├── NotificationHandlerInterface.php     // Интерфейс для обработчиков уведомлений (Шаблонный метод)
-│   │   └── NotificationTemplateInterface.php    // Интерфейс для шаблонов уведомлений (Шаблонный метод)
+│   └── /Policies
+│       └── PolicyInterface.php                // Интерфейс для политики доступа (если требуется)
 ├── /Console
 │   └── StartWebSocketServer.php           // Команды для запуска WebSocket-сервера
 ├── /Events
@@ -102,6 +99,5 @@
 ├── /Views
 │   └── example.blade.php                 // Шаблоны (если требуются)
 ├── WebSocket.php                         // Основной класс пакета (фасад, если нужен)
-
 
 ```
