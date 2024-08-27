@@ -34,7 +34,7 @@
                 "Smetaniny\\WebSocket\\WebSocketServiceProvider"
             ],
             "aliases": {
-                "WebSocket": "Smetaniny\\WebSocket\\Facades\\WebSocket"
+                "WebSocket": "WebSocketFacades"
             }
         }
     }

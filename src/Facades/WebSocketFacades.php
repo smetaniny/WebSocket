@@ -4,7 +4,7 @@ namespace Smetaniny\WebSocket\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class WebSocket extends Facade
+class WebSocketFacades extends Facade
 {
     /**
      * Get the registered name of the component.
