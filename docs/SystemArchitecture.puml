@@ -127,6 +127,8 @@ package "WebSocket System" {
     Queue -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
     ClientManager -[COLOR_CLASS]-> UserRepository : управляет данными пользователей (UserRepository)
     ChannelManager -[COLOR_CLASS]-> ChannelRepository : управляет данными каналов (ChannelRepository)
+    RateLimiter -[COLOR_CLASS]-> WebSocketHandlers : ограничивает запросы (WebSocketHandlers)
+    ChannelAuthorization -[COLOR_CLASS]-> ChannelManager : проверяет доступ к каналам (ChannelManager)
 }
 
 @enduml
