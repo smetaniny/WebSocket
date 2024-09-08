@@ -4,15 +4,47 @@ title System Architecture WebSocket
 top to bottom direction
 
 ' Определяем палитру цветов для стрелок
-!define COLOR_CLASS #999999
+!define COLOR_PAIR1 #F5F5F5
+!define COLOR_PAIR2 #FF9999
+!define COLOR_PAIR3 #99FF99
+!define COLOR_PAIR4 #9999FF
+!define COLOR_PAIR5 #FFFF99
+!define COLOR_PAIR6 #FFCC99
+!define COLOR_PAIR7 #FF99FF
+!define COLOR_PAIR8 #99FFFF
+!define COLOR_PAIR9 #FF6666
+!define COLOR_PAIR10 #66FF66
+!define COLOR_PAIR11 #6666FF
+!define COLOR_PAIR12 #FFFF66
+!define COLOR_PAIR13 #FFCC66
+!define COLOR_PAIR14 #FF66FF
+!define COLOR_PAIR15 #66FFFF
+!define COLOR_PAIR16 #FF3333
+!define COLOR_PAIR17 #33FF33
+!define COLOR_PAIR18 #3333FF
+!define COLOR_PAIR19 #FFFF33
+!define COLOR_PAIR20 #FFCC33
+!define COLOR_PAIR21 #FF33FF
+!define COLOR_PAIR22 #33FFFF
+!define COLOR_PAIR23 #FF0000
+!define COLOR_PAIR24 #00FF00
+!define COLOR_PAIR25 #0000FF
+!define COLOR_PAIR26 #FFFF00
+!define COLOR_PAIR27 #FF9900
+!define COLOR_PAIR28 #99FF00
+!define COLOR_PAIR29 #0099FF
+!define COLOR_PAIR30 #FF00FF
+
+
+
 
 package "WebSocket System" {
 
     ' Классы
-        class ErrorHandler {
-            +handleError()
-            ' Комментарий: Обрабатывает ошибки и логирует исключения.
-        }
+    class ErrorHandler {
+        +handleError()
+        ' Комментарий: Обрабатывает ошибки и логирует исключения.
+    }
 
     class IoServer {
         +handleConnection()
@@ -97,38 +129,38 @@ package "WebSocket System" {
     }
 
     ' Связи между классами
-    ErrorHandler -[COLOR_CLASS]-> ExceptionLogger : логирует исключения (ExceptionLogger)
-    IoServer -[COLOR_CLASS]-> HttpServer : обрабатывает соединение (HttpServer)
-    HttpServer -[COLOR_CLASS]-> WsServer : передает запросы (WsServer)
-    WsServer -[COLOR_CLASS]-> WebSocketRouter : маршрутизирует сообщение (WebSocketRouter)
-    WsServer -[COLOR_CLASS]-> ClientManager : управляет соединениями (ClientManager)
-    WsServer -[COLOR_CLASS]-> SecurityModule : проверяет аутентификацию (SecurityModule)
-    SecurityModule -[COLOR_CLASS]-> ChannelAuthorization : проверяет доступ к каналу (ChannelAuthorization)
-    WsServer -[COLOR_CLASS]-> WebSocketHandlers : обрабатывает сообщения и события (WebSocketHandlers)
-    ClientManager -[COLOR_CLASS]-> SecurityModule : проверяет подлинность (SecurityModule)
-    ChannelManager -[COLOR_CLASS]-> WebSocketRouter : маршрутизация в каналы (WebSocketRouter)
-    ChannelManager -[COLOR_CLASS]-> BroadcastingModule : рассылка сообщений (BroadcastingModule)
-    ChannelManager -[COLOR_CLASS]-> MonitoringModule : мониторинг активности (MonitoringModule)
-    ChannelManager -[COLOR_CLASS]-> RateLimiter : ограничение запросов (RateLimiter)
-    ChannelManager -[COLOR_CLASS]-> WebSocketHandlers : обработка сообщений и событий (WebSocketHandlers)
-    ChannelManager -[COLOR_CLASS]-> Redis : кэширование данных (Redis)
-    ChannelManager -[COLOR_CLASS]-> ChannelFactory : создание каналов (ChannelFactory)
-    MonitoringModule -[COLOR_CLASS]-> Redis : хранение метрик (Redis)
-    BroadcastingModule -[COLOR_CLASS]-> Queue : обработка асинхронных задач (Queue)
-    Queue -[COLOR_CLASS]-> Redis : поддерживает IPC и кэширование (Redis)
-    IoServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
-    HttpServer -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
-    WsServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
-    WebSocketRouter -[COLOR_CLASS]-> ErrorHandler : отправляет ошибки (ErrorHandler)
-    ClientManager -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
-    ChannelManager -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
-    SecurityModule -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
-    BroadcastingModule -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
-    Queue -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
-    ClientManager -[COLOR_CLASS]-> UserRepository : управляет данными пользователей (UserRepository)
-    ChannelManager -[COLOR_CLASS]-> ChannelRepository : управляет данными каналов (ChannelRepository)
-    RateLimiter -[COLOR_CLASS]-> WebSocketHandlers : ограничивает запросы (WebSocketHandlers)
-    ChannelAuthorization -[COLOR_CLASS]-> ChannelManager : проверяет доступ к каналам (ChannelManager)
+    ErrorHandler -[COLOR_PAIR1]-> ExceptionLogger : <color:#99FF99>логирует исключения</color>
+    IoServer -[COLOR_PAIR2]-> HttpServer : <color:#FF9999>обрабатывает соединение</color>
+    HttpServer -[COLOR_PAIR2]-> WsServer : <color:#FF9999>передает запросы</color>
+    WsServer -[COLOR_PAIR3]-> WebSocketRouter : <color:#99FF99>маршрутизирует сообщение</color>
+    WsServer -[COLOR_PAIR3]-> ClientManager : <color:#99FF99>управляет соединениями</color>
+    WsServer -[COLOR_PAIR4]-> SecurityModule : <color:#9999FF>проверяет аутентификацию</color>
+    SecurityModule -[COLOR_PAIR4]-> ChannelAuthorization : <color:#9999FF>проверяет доступ к каналу</color>
+    WsServer -[COLOR_PAIR5]-> WebSocketHandlers : <color:#FFFF99>обрабатывает сообщения и события</color>
+    ClientManager -[COLOR_PAIR5]-> SecurityModule : <color:#FFFF99>проверяет подлинность</color>
+    ChannelManager -[COLOR_PAIR6]-> WebSocketRouter : <color:#FFCC99>маршрутизация в каналы</color>
+    ChannelManager -[COLOR_PAIR6]-> BroadcastingModule : <color:#FFCC99>рассылка сообщений</color>
+    ChannelManager -[COLOR_PAIR1]-> MonitoringModule : <color:#999999>мониторинг активности</color>
+    ChannelManager -[COLOR_PAIR1]-> RateLimiter : <color:#999999>ограничение запросов</color>
+    ChannelManager -[COLOR_PAIR2]-> WebSocketHandlers : <color:#FF9999>обработка сообщений и событий</color>
+    ChannelManager -[COLOR_PAIR2]-> Redis : <color:#FF9999>кэширование данных</color>
+    ChannelManager -[COLOR_PAIR3]-> ChannelFactory : <color:#99FF99>создание каналов</color>
+    MonitoringModule -[COLOR_PAIR3]-> Redis : <color:#99FF99>хранение метрик</color>
+    BroadcastingModule -[COLOR_PAIR4]-> Queue : <color:#9999FF>обработка асинхронных задач</color>
+    Queue -[COLOR_PAIR4]-> Redis : <color:#9999FF>поддерживает IPC и кэширование</color>
+    IoServer -[COLOR_PAIR5]-> ErrorHandler : <color:#FFFF99>обрабатывает ошибки</color>
+    HttpServer -[COLOR_PAIR5]-> ErrorHandler : <color:#FFFF99>передает ошибки</color>
+    WsServer -[COLOR_PAIR6]-> ErrorHandler : <color:#FFCC99>обрабатывает ошибки</color>
+    WebSocketRouter -[COLOR_PAIR6]-> ErrorHandler : <color:#FFCC99>отправляет ошибки</color>
+    ClientManager -[COLOR_PAIR1]-> ErrorHandler : <color:#999999>передает ошибки</color>
+    ChannelManager -[COLOR_PAIR1]-> ErrorHandler : <color:#999999>передает ошибки</color>
+    SecurityModule -[COLOR_PAIR2]-> ErrorHandler : <color:#FF9999>обрабатывает ошибки</color>
+    BroadcastingModule -[COLOR_PAIR2]-> ErrorHandler : <color:#FF9999>обрабатывает ошибки</color>
+    Queue -[COLOR_PAIR3]-> ErrorHandler : <color:#99FF99>передает ошибки</color>
+    ClientManager -[COLOR_PAIR3]-> UserRepository : <color:#99FF99>управляет данными пользователей</color>
+    ChannelManager -[COLOR_PAIR4]-> ChannelRepository : <color:#9999FF>управляет данными каналов</color>
+    RateLimiter -[COLOR_PAIR4]-> WebSocketHandlers : <color:#9999FF>ограничивает запросы</color>
+    ChannelAuthorization -[COLOR_PAIR5]-> ChannelManager : <color:#FFFF99>проверяет доступ к каналам</color>
 }
 
 @enduml
