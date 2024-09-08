@@ -1,7 +1,7 @@
 @startuml
 title System Architecture WebSocket
 
-left to right direction
+top to bottom direction
 
 ' Определяем палитру цветов для стрелок
 !define COLOR_CLASS #999999
