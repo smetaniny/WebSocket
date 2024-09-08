@@ -1,0 +1,50 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Redis {
+    interface RedisInterface {
+        +connect()
+        +publish()
+    }
+    class RedisAdapter {
+        +connect()
+        +publish()
+    }
+    class RedisPublisher {
+        +publish()
+    }
+
+    RedisInterface <|-- RedisAdapter
+    RedisAdapter <|-- RedisPublisher
+
+    note bottom of RedisAdapter
+      Паттерн: Adapter
+
+      Comment:
+      - RedisAdapter реализует RedisInterface
+    end note
+
+    note bottom of RedisPublisher
+      Паттерн:
+      - RedisPublisher использует RedisAdapter
+    end note
+}
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+top to bottom direction
+
+namespace Broadcasting {
+    interface BroadcasterInterface {
+        +broadcastToChannel(channelName: String, message: String): void
+        +broadcastToAll(message: String): void
+    }
+
+    class Broadcaster {
+        +broadcastToChannel(channelName: String, message: String): void
+        +broadcastToAll(message: String): void
+    }
+
+    class BroadcastingModule {
+        +broadcastToChannel(channelName: String, message: String): void
+        +broadcastToAll(message: String): void
+    }
+
+    BroadcasterInterface <|-- Broadcaster
+    Broadcaster <-- BroadcastingModule
+
+    note bottom of BroadcasterInterface
+      Интерфейс для вещателя сообщений.
+    end note
+
+    note bottom of Broadcaster
+      Реализация вещателя сообщений.
+    end note
+
+    note bottom of BroadcastingModule
+      Паттерны:
+      - Broadcaster: Strategy
+      - BroadcastingModule: Facade
+    end note
+
+    note bottom of Broadcaster
+      Comment:
+      - Broadcaster реализует BroadcasterInterface
+    end note
+
+    note bottom of BroadcastingModule
+      Comment:
+      - BroadcastingModule использует Broadcaster
+    end note
+}
+
+@enduml

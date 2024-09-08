@@ -1,0 +1,55 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Security {
+    interface AuthenticatorInterface {
+        +authenticate()
+    }
+    interface AuthorizerInterface {
+        +authorize()
+    }
+    class Authenticator {
+        +authenticate()
+    }
+    class Authorizer {
+        +authorize()
+    }
+
+    AuthenticatorInterface <|-- Authenticator
+    AuthorizerInterface <|-- Authorizer
+
+    note bottom of Authenticator
+      Паттерн:
+      - Strategy
+
+      Comment:
+      - Authenticator реализует AuthenticatorInterface
+    end note
+
+    note bottom of Authorizer
+      Паттерн:
+      - Strategy
+
+      Comment:
+      - Authorizer реализует AuthorizerInterface
+    end note
+}
+
+@enduml

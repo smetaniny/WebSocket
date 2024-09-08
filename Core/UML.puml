@@ -1,0 +1,55 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Core {
+    interface RouterInterface {
+        +routeMessage()
+    }
+    interface WebSocketServerInterface {
+        +startServer()
+        +stopServer()
+    }
+    class WebSocketRouter {
+        +routeMessage()
+    }
+    class WebSocketServer {
+        +startServer()
+        +stopServer()
+    }
+
+    RouterInterface <|-- WebSocketRouter
+    WebSocketServerInterface <|-- WebSocketServer
+
+    note bottom of WebSocketRouter
+      Паттерн: Strategy
+      Comment:
+      - WebSocketRouter реализует RouterInterface
+    end note
+
+    note bottom of WebSocketServer
+      Паттерны:
+      - Observer
+      - Singleton
+      Comment:
+      - WebSocketServer реализует WebSocketServerInterface
+    end note
+}
+
+@enduml

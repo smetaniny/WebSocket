@@ -1,0 +1,133 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Channels {
+    interface ChannelFactoryInterface {
+        +createChannel()
+    }
+    note bottom of ChannelFactoryInterface
+      Интерфейс фабрики для создания различных каналов.
+    end note
+
+    interface ChannelInterface {
+        +subscribe()
+        +unsubscribe()
+    }
+    note bottom of ChannelInterface
+      Основной интерфейс для всех типов каналов.
+    end note
+
+    interface ChannelManagerInterface {
+        +manage()
+    }
+    note bottom of ChannelManagerInterface
+      Интерфейс для управления каналами.
+    end note
+
+    class Channel {
+        +subscribe()
+        +unsubscribe()
+    }
+    note bottom of Channel
+      Базовый класс, реализующий основной функционал каналов.
+      Паттерн: Шаблонный метод.
+    end note
+
+    class ChannelManager {
+        +manage()
+    }
+    note bottom of ChannelManager
+      Класс для управления каналами.
+      Паттерн: Одиночка.
+    end note
+
+    class PresenceChannel {
+        +subscribe()
+        +unsubscribe()
+    }
+    note bottom of PresenceChannel
+      Класс канала, предоставляющий функциональность присутствия пользователей.
+      Паттерн: Шаблонный метод.
+    end note
+
+    class PrivateChannel {
+        +subscribe()
+        +unsubscribe()
+    }
+    note bottom of PrivateChannel
+      Класс для создания приватных каналов.
+    end note
+
+    class PublicChannel {
+        +subscribe()
+        +unsubscribe()
+    }
+    note bottom of PublicChannel
+      Класс для создания публичных каналов.
+    end note
+
+    class ChannelFactory {
+        +createChannel()
+    }
+    note bottom of ChannelFactory
+      Реализация фабрики для создания различных каналов.
+    end note
+
+    ChannelInterface <|-- Channel
+    ChannelManagerInterface <|-- ChannelManager
+    Channel <|-- PresenceChannel
+    Channel <|-- PrivateChannel
+    Channel <|-- PublicChannel
+    ChannelFactoryInterface <|-- ChannelFactory
+
+    note bottom of Channel
+      Comment:
+      - Channel реализует ChannelInterface
+    end note
+
+    note bottom of ChannelManager
+      Comment:
+      - ChannelManager реализует ChannelManagerInterface
+      - ChannelManager: Одиночка
+    end note
+
+    note bottom of PresenceChannel
+      Comment:
+      - PresenceChannel наследует Channel
+      - Паттерн: Шаблонный метод
+    end note
+
+    note bottom of PrivateChannel
+      Comment:
+      - PrivateChannel наследует Channel
+    end note
+
+    note bottom of PublicChannel
+      Comment:
+      - PublicChannel наследует Channel
+    end note
+
+    note bottom of ChannelFactory
+      Comment:
+      - ChannelFactory реализует ChannelFactoryInterface
+    end note
+}
+
+@enduml

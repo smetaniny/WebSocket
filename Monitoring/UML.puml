@@ -1,0 +1,53 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Monitoring {
+    interface DashboardInterface {
+        +display()
+    }
+    interface LoggerInterface {
+        +log()
+    }
+    class Dashboard {
+        +display()
+    }
+    class Logger {
+        +log()
+    }
+
+    DashboardInterface <|-- Dashboard
+    LoggerInterface <|-- Logger
+
+    note bottom of Dashboard
+      Паттерн: Observer
+
+      Comment:
+      - Dashboard реализует DashboardInterface
+    end note
+
+    note bottom of Logger
+      Паттерн: Singleton
+
+      Comment:
+      - Logger реализует LoggerInterface
+    end note
+}
+
+@enduml

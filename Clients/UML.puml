@@ -1,0 +1,59 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Clients {
+    interface ClientInterface {
+        +connect()
+        +disconnect()
+    }
+    interface ClientManagerInterface {
+        +manageClient()
+    }
+    class Client {
+        +connect()
+        +disconnect()
+    }
+    class ClientManager {
+        +manageClient()
+    }
+
+    ClientInterface <|-- Client
+    ClientManagerInterface <|-- ClientManager
+
+    note bottom of Client
+      Паттерн: DTO (Data Transfer Object)
+    end note
+
+    note bottom of ClientManager
+      Паттерн: Singleton
+    end note
+
+    note bottom of ClientManager
+      Comment:
+      - Client реализует ClientInterface
+    end note
+
+    note bottom of Client
+      Comment:
+      - ClientManager реализует ClientManagerInterface
+    end note
+}
+
+@enduml

@@ -1,0 +1,115 @@
+@startuml
+title System Architecture WebSocket
+
+left to right direction
+
+' Определяем палитру цветов для стрелок
+!define COLOR_CLASS #999999
+
+package "WebSocket System" {
+
+    ' Классы
+        class ErrorHandler {
+            +handleError()
+            ' Комментарий: Обрабатывает ошибки и логирует исключения.
+        }
+
+    class IoServer {
+        +handleConnection()
+        ' Комментарий: Обрабатывает входящие соединения.
+    }
+    class HttpServer {
+        +processHttpRequest()
+        ' Комментарий: Обрабатывает HTTP-запросы для WebSocket-соединений.
+    }
+    class WsServer {
+        +processWebSocketRequest()
+        +routeMessage()
+        ' Комментарий: Управляет WebSocket-соединениями и маршрутизацией сообщений.
+    }
+    class WebSocketRouter {
+        +routeToChannel()
+        ' Комментарий: Маршрутизирует сообщения в соответствующие каналы.
+    }
+    class ClientManager {
+        +trackActiveConnections()
+        +manageClient()
+        ' Комментарий: Управляет активными соединениями клиентов.
+    }
+    class ChannelManager {
+        +manageSubscriptions()
+        +distributeMessages()
+        ' Комментарий: Управляет подписками и распределением сообщений.
+    }
+    class SecurityModule {
+        +authenticate()
+        +authorize()
+        ' Комментарий: Отвечает за аутентификацию и авторизацию.
+    }
+    class BroadcastingModule {
+        +broadcastMessage()
+        ' Комментарий: Отвечает за рассылку сообщений.
+    }
+    class MonitoringModule {
+        +logEvents()
+        +monitorSystem()
+        ' Комментарий: Осуществляет мониторинг и логирование.
+    }
+    class Queue {
+        +handleAsyncTasks()
+        ' Комментарий: Управляет асинхронными задачами и обработкой сообщений.
+    }
+    class Redis {
+        +cacheData()
+        +handleInterProcessCommunication()
+        ' Комментарий: Кэширует данные и обеспечивает IPC.
+    }
+    class ChannelFactory {
+        +createChannel()
+        ' Комментарий: Создает различные типы каналов.
+    }
+    class ExceptionLogger {
+        +logException()
+        ' Комментарий: Логирует исключения.
+    }
+    class UserRepository {
+        +manageUserData()
+        ' Комментарий: Управляет данными пользователей.
+    }
+    class ChannelRepository {
+        +manageChannelData()
+        ' Комментарий: Управляет данными каналов.
+    }
+
+    ' Связи между классами
+    ErrorHandler -[COLOR_CLASS]-> ExceptionLogger : логирует исключения (ExceptionLogger)
+    IoServer -[COLOR_CLASS]-> HttpServer : обрабатывает соединение (HttpServer)
+    HttpServer -[COLOR_CLASS]-> WsServer : передает запросы (WsServer)
+    WsServer -[COLOR_CLASS]-> WebSocketRouter : маршрутизирует сообщение (WebSocketRouter)
+    WsServer -[COLOR_CLASS]-> ClientManager : управляет соединениями (ClientManager)
+    WsServer -[COLOR_CLASS]-> ChannelManager : управляет каналами (ChannelManager)
+    ChannelManager -[COLOR_CLASS]-> WebSocketRouter : маршрутизация в каналы (WebSocketRouter)
+    WebSocketRouter -[COLOR_CLASS]-> PublicChannel : маршрутизация в публичный канал (PublicChannel)
+    WebSocketRouter -[COLOR_CLASS]-> PrivateChannel : маршрутизация в приватный канал (PrivateChannel)
+    WebSocketRouter -[COLOR_CLASS]-> PresenceChannel : маршрутизация в канал присутствия (PresenceChannel)
+    ClientManager -[COLOR_CLASS]-> SecurityModule : проверяет подлинность (SecurityModule)
+    ChannelManager -[COLOR_CLASS]-> BroadcastingModule : рассылка сообщений (BroadcastingModule)
+    ChannelManager -[COLOR_CLASS]-> MonitoringModule : мониторинг активности (MonitoringModule)
+    BroadcastingModule -[COLOR_CLASS]-> Queue : обработка асинхронных задач (Queue)
+    Queue -[COLOR_CLASS]-> Redis : поддерживает IPC и кэширование (Redis)
+    ChannelManager -[COLOR_CLASS]-> ChannelFactory : использует для создания каналов (ChannelFactory)
+    WsServer -[COLOR_CLASS]-> ChannelFactory : использует для создания каналов (ChannelFactory)
+    IoServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
+    HttpServer -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
+    WsServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
+    WebSocketRouter -[COLOR_CLASS]-> ErrorHandler : отправляет ошибки (ErrorHandler)
+    ClientManager -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
+    ChannelManager -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
+    SecurityModule -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
+    BroadcastingModule -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
+    Queue -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
+    ClientManager -[COLOR_CLASS]-> UserRepository : управляет данными пользователей (UserRepository)
+    ChannelManager -[COLOR_CLASS]-> ChannelRepository : управляет данными каналов (ChannelRepository)
+}
+
+@enduml
