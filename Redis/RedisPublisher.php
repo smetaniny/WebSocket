@@ -6,6 +6,11 @@ use App\WebSocket\Redis\Contracts\RedisInterface;
 
 /**
  * Публикует сообщения в Redis.
+ *
+ * @package App\WebSocket\Redis
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class RedisPublisher
 {

@@ -5,15 +5,30 @@ namespace App\WebSocket\Channels;
 use App\WebSocket\Channels\Contracts\ChannelInterface;
 use Ratchet\ConnectionInterface;
 
+/**
+ * Реализация приватного канала для подписки и отправки сообщений.
+ *
+ * @package App\WebSocket\Channels
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class PrivateChannel implements ChannelInterface
 {
-    // Массив для хранения объектов соединений клиентов
+    /**
+     * Массив для хранения объектов соединений клиентов.
+     * Ключом является уникальный идентификатор клиента.
+     *
+     * @var array
+     */
     protected array $subscribers = [];
 
     /**
      * Подписывает клиента на канал.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function subscribe(ConnectionInterface $conn): void
     {
@@ -36,6 +51,8 @@ class PrivateChannel implements ChannelInterface
      * Отписывает клиента от канала.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function unsubscribe(ConnectionInterface $conn): void
     {
@@ -59,6 +76,8 @@ class PrivateChannel implements ChannelInterface
      *
      * @param string $message Сообщение для отправки.
      * @param ConnectionInterface $conn Объект соединения клиента, которому отправляется сообщение.
+     *
+     * @return void
      */
     public function sendMessage(string $message, ConnectionInterface $conn): void
     {

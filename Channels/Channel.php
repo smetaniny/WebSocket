@@ -5,15 +5,31 @@ namespace App\WebSocket\Channels;
 use Ratchet\ConnectionInterface;
 use App\WebSocket\Channels\Contracts\ChannelInterface;
 
+/**
+ * Класс, представляющий канал для подписки клиентов и вещания сообщений.
+ *
+ * @package App\WebSocket\Channels
+ * @author Smetanin Sergey
+ * @see \App\WebSocket\Channels\Contracts\ChannelInterface
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class Channel implements ChannelInterface
 {
-    // Массив для хранения подписчиков канала. Ключом является идентификатор соединения, значением - само соединение.
+    /**
+     * Массив для хранения подписчиков канала.
+     * Ключом является идентификатор соединения, значением - само соединение.
+     *
+     * @var array
+     */
     protected array $subscribers = [];
 
     /**
      * Подписывает клиента на канал.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function subscribe(ConnectionInterface $conn): void
     {
@@ -25,6 +41,8 @@ class Channel implements ChannelInterface
      * Отписывает клиента от канала.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function unsubscribe(ConnectionInterface $conn): void
     {
@@ -36,6 +54,8 @@ class Channel implements ChannelInterface
      * Отправляет сообщение всем подписчикам канала.
      *
      * @param string $message Сообщение для отправки.
+     *
+     * @return void
      */
     public function broadcast(string $message): void
     {

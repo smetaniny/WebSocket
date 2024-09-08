@@ -6,6 +6,11 @@ use App\WebSocket\Monitoring\Contracts\DashboardInterface;
 
 /**
  * Реализация интерфейса DashboardInterface для отображения состояния системы.
+ *
+ * @package App\WebSocket\Monitoring
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Dashboard implements DashboardInterface
 {

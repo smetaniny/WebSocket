@@ -3,14 +3,22 @@
 namespace App\WebSocket\Channels;
 
 use App\WebSocket\Channels\Contracts\ChannelManagerInterface;
-use App\WebSocket\Trait\SingletonTrait;
 
+/**
+ * Менеджер каналов для управления подпиской клиентов и отправкой сообщений.
+ *
+ * @package App\WebSocket\Channels
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class ChannelManager implements ChannelManagerInterface
 {
-    // Трейт для реализации паттерна Singleton.
-    use SingletonTrait;
-
-    // Массив для хранения каналов
+    /**
+     * Массив для хранения каналов.
+     *
+     * @var array
+     */
     protected array $channels = [];
 
     /**
@@ -18,6 +26,8 @@ class ChannelManager implements ChannelManagerInterface
      *
      * @param string $channelName Имя канала.
      * @param string $clientId Идентификатор клиента.
+     *
+     * @return void
      */
     public function subscribe(string $channelName, string $clientId): void
     {
@@ -35,6 +45,8 @@ class ChannelManager implements ChannelManagerInterface
      *
      * @param string $channelName Имя канала.
      * @param string $clientId Идентификатор клиента.
+     *
+     * @return void
      */
     public function unsubscribe(string $channelName, string $clientId): void
     {
@@ -49,6 +61,8 @@ class ChannelManager implements ChannelManagerInterface
      *
      * @param string $channelName Имя канала.
      * @param string $message Сообщение для рассылки.
+     *
+     * @return void
      */
     public function broadcast(string $channelName, string $message): void
     {

@@ -3,21 +3,19 @@
 namespace App\WebSocket\Errors;
 
 use App\WebSocket\Errors\Contracts\ExceptionLoggerInterface;
-use App\WebSocket\Trait\SingletonTrait;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class ExceptionLogger
- * @package WebSocket\Errors
- *
  * Реализует паттерн Singleton для логирования исключений.
+ *
+ * @package App\WebSocket\Errors
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class ExceptionLogger implements ExceptionLoggerInterface
 {
-    // Трейт для реализации паттерна Singleton.
-    use SingletonTrait;
-
     /**
      * Логирует переданное исключение.
      *

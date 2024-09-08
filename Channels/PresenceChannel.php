@@ -5,15 +5,30 @@ namespace App\WebSocket\Channels;
 use App\WebSocket\Channels\Contracts\ChannelInterface;
 use Ratchet\ConnectionInterface;
 
+/**
+ * Канал присутствия (PresenceChannel), позволяющий отслеживать подписку и отписку клиентов.
+ *
+ * @package App\WebSocket\Channels
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class PresenceChannel implements ChannelInterface
 {
-    // Массив для хранения объектов соединений клиентов
+    /**
+     * Массив для хранения объектов соединений клиентов.
+     * Ключом является уникальный идентификатор клиента.
+     *
+     * @var array
+     */
     protected array $subscribers = [];
 
     /**
      * Подписывает клиента на канал.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function subscribe(ConnectionInterface $conn): void
     {
@@ -31,6 +46,8 @@ class PresenceChannel implements ChannelInterface
      * Отписывает клиента от канала.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function unsubscribe(ConnectionInterface $conn): void
     {
@@ -48,6 +65,8 @@ class PresenceChannel implements ChannelInterface
      * Отправляет сообщение всем подписчикам канала.
      *
      * @param string $message Сообщение для отправки.
+     *
+     * @return void
      */
     public function broadcast(string $message): void
     {
@@ -69,8 +88,8 @@ class PresenceChannel implements ChannelInterface
      */
     protected function getClientId(ConnectionInterface $conn): string
     {
-        // В реальной реализации можно использовать ID из соединения
-        // Например, вы можете использовать IP-адрес, уникальный идентификатор сессии или другие данные
+        // В реальной реализации можно использовать ID из соединения.
+        // Например, вы можете использовать IP-адрес, уникальный идентификатор сессии или другие данные.
         return (string) $conn->resourceId;
     }
 }

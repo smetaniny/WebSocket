@@ -6,6 +6,11 @@ use App\WebSocket\Monitoring\Contracts\LoggerInterface;
 
 /**
  * Реализация интерфейса LoggerInterface для ведения журнала логов.
+ *
+ * @package App\WebSocket\Monitoring
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Logger implements LoggerInterface
 {

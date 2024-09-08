@@ -4,6 +4,11 @@ namespace App\WebSocket\Monitoring\Contracts;
 
 /**
  * Интерфейс для ведения журнала логов системы.
+ *
+ * @package App\WebSocket\Monitoring\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface LoggerInterface
 {

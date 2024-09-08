@@ -4,6 +4,11 @@ namespace App\WebSocket\Queues\Contracts;
 
 /**
  * Интерфейс для работы с очередями.
+ *
+ * @package App\WebSocket\Queues\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface QueueInterface
 {

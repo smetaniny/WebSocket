@@ -1,0 +1,68 @@
+@startuml
+
+top to bottom direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+namespace Errors {
+    interface ErrorHandlerInterface {
+        +handle(exception: Exception): void
+    }
+
+    interface ExceptionLoggerInterface {
+        +log(exception: Exception): void
+    }
+
+    class ErrorHandler {
+        +handle(exception: Exception): void
+        -logger: ExceptionLoggerInterface
+        +__construct()
+    }
+
+    class ExceptionLogger {
+        +log(exception: Exception): void
+    }
+
+    class SingletonTrait {
+        <<trait>>
+    }
+
+    ErrorHandlerInterface <|-- ErrorHandler
+    ExceptionLoggerInterface <|-- ExceptionLogger
+
+    ErrorHandler ..> ExceptionLogger
+    ErrorHandler -- SingletonTrait
+    ExceptionLogger -- SingletonTrait
+
+    note bottom of ErrorHandler
+      Паттерн: Singleton
+
+      Comment:
+      - ErrorHandler реализует ErrorHandlerInterface
+      - Использует SingletonTrait
+    end note
+
+    note bottom of ExceptionLogger
+      Паттерн: Singleton
+
+      Comment:
+      - ExceptionLogger реализует ExceptionLoggerInterface
+      - Использует SingletonTrait
+    end note
+}
+
+@enduml

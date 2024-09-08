@@ -5,10 +5,12 @@ namespace App\WebSocket\Errors\Contracts;
 use Exception;
 
 /**
- * Interface ErrorHandlerInterface
- * @package WebSocket\Errors\Contracts
- *
  * Определяет методы для обработки ошибок в системе.
+ *
+ * @package App\WebSocket\Errors\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface ErrorHandlerInterface
 {
@@ -16,6 +18,7 @@ interface ErrorHandlerInterface
      * Обрабатывает переданную ошибку.
      *
      * @param Exception $exception
+     *
      * @return void
      */
     public function handle(Exception $exception): void;

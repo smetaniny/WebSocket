@@ -6,10 +6,12 @@ namespace App\WebSocket\Errors\Contracts;
 use Exception;
 
 /**
- * Interface ExceptionLoggerInterface
- * @package WebSocket\Errors\Contracts
- *
  * Определяет методы для логирования исключений.
+ *
+ * @package App\WebSocket\Errors\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface ExceptionLoggerInterface
 {

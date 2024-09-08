@@ -3,31 +3,20 @@
 namespace App\WebSocket\Errors;
 
 use App\WebSocket\Errors\Contracts\ErrorHandlerInterface;
-use App\WebSocket\Errors\Contracts\ExceptionLoggerInterface;
-use App\WebSocket\Trait\SingletonTrait;
+use App\WebSocket\Facades\ErrorHandlerFacade;
+use App\WebSocket\Facades\ExceptionLoggerFacade;
 use Exception;
 
 /**
- * Class ErrorHandler
- * @package WebSocket\Errors
- *
  * Реализует стратегию обработки ошибок.
+ *
+ * @package App\WebSocket\Errors
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class ErrorHandler implements ErrorHandlerInterface
 {
-    use SingletonTrait;
-
-    private ExceptionLoggerInterface $logger;
-
-    /**
-     * Конструктор класса ErrorHandler.
-     */
-    private function __construct()
-    {
-        // Инициализация логгера через Singleton
-        $this->logger = ExceptionLogger::getInstance();
-    }
-
     /**
      * Обрабатывает переданную ошибку и логирует её.
      *
@@ -40,6 +29,6 @@ class ErrorHandler implements ErrorHandlerInterface
         // Здесь могут быть дополнительные действия, например, уведомление разработчиков
 
         // Логирование ошибки
-        $this->logger->log($exception);
+        ExceptionLoggerFacade::log($exception);
     }
 }

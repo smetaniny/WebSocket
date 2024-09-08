@@ -7,6 +7,11 @@ use Ratchet\RFC6455\Messaging\MessageInterface;
 
 /**
  * Интерфейс для обработки событий WebSocket-сервера.
+ *
+ * @package App\WebSocket\Core\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface WebSocketServerInterface
 {

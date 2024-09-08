@@ -2,36 +2,22 @@
 
 namespace App\WebSocket\Core;
 
-use App\WebSocket\Channels\ChannelManager;
-use App\WebSocket\Clients\ClientManager;
 use App\WebSocket\Core\Contracts\RouterInterface;
-use App\WebSocket\Trait\SingletonTrait;
+use App\WebSocket\Facades\ClientManagerFacade;
 use Ratchet\ConnectionInterface;
 use Ratchet\RFC6455\Messaging\MessageInterface;
 
 /**
  * Класс для маршрутизации сообщений WebSocket.
  * Реализует паттерн стратегию маршрутизации сообщений.
+ *
+ * @package App\WebSocket\Core
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class WebSocketRouter implements RouterInterface
 {
-    // Трейт для реализации паттерна Singleton.
-    use SingletonTrait;
-
-    protected ChannelManager $channelManager;  // Менеджер каналов
-    protected ClientManager $clientManager;    // Менеджер клиентов
-
-    /**
-     * Конструктор класса.
-     *
-     */
-    private function __construct()
-    {
-        $this->channelManager = ChannelManager::getInstance();
-        $this->clientManager = ClientManager::getInstance();
-    }
-
-
     /**
      * Маршрутизация сообщения в зависимости от его типа.
      *
@@ -42,6 +28,7 @@ class WebSocketRouter implements RouterInterface
      */
     public function route(ConnectionInterface $conn, MessageInterface $msg): void
     {
+        echo "WebSocketRouter route: {$msg}\n";
         // Декодируем сообщение из формата JSON.
         $data = json_decode($msg->getPayload(), true);
 
@@ -184,7 +171,7 @@ class WebSocketRouter implements RouterInterface
     {
         // Получаем клиента из менеджера клиентов.
         // Это зависит от реализации вашей системы.
-        foreach ($this->clientManager->getClients() as $client) {
+        foreach (ClientManagerFacade::getClients() as $client) {
             if ($client->getConnection() === $conn) {
                 return $client->getId();
             }

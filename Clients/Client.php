@@ -7,16 +7,27 @@ use App\WebSocket\Clients\Contracts\ClientInterface;
 
 /**
  * Класс, представляющий клиента с уникальным идентификатором и соединением.
+ *
+ * Этот класс используется для хранения информации о клиенте, включая его идентификатор и соединение WebSocket.
+ *
+ * @package App\WebSocket\Clients
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Client implements ClientInterface
 {
     /**
-     * @var string Уникальный идентификатор клиента.
+     * Уникальный идентификатор клиента.
+     *
+     * @var string
      */
     protected string $id;
 
     /**
-     * @var ConnectionInterface Объект соединения клиента.
+     * Объект соединения клиента.
+     *
+     * @var ConnectionInterface
      */
     protected ConnectionInterface $connection;
 
@@ -35,6 +46,8 @@ class Client implements ClientInterface
     /**
      * Возвращает идентификатор клиента.
      *
+     * Этот метод возвращает уникальный идентификатор клиента, который был установлен при создании объекта.
+     *
      * @return string Идентификатор клиента.
      */
     public function getId(): string
@@ -44,6 +57,8 @@ class Client implements ClientInterface
 
     /**
      * Возвращает объект соединения клиента.
+     *
+     * Этот метод возвращает объект соединения WebSocket клиента.
      *
      * @return ConnectionInterface Объект соединения клиента.
      */

@@ -6,14 +6,22 @@ use App\WebSocket\Broadcasting\Contracts\BroadcasterInterface;
 
 /**
  * Класс, реализующий вещание сообщений.
+ *
+ * @package App\WebSocket\Broadcasting
+ * @author Smetanin Sergey
+ * @see \App\WebSocket\Broadcasting\Contracts\BroadcasterInterface
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Broadcaster implements BroadcasterInterface
 {
     /**
      * Вещает сообщение на указанный канал.
      *
-     * @param string $channelName Имя канала.
-     * @param string $message Сообщение для отправки.
+     * @param string $channelName Имя канала, на который будет отправлено сообщение.
+     * @param string $message Сообщение для отправки на указанный канал.
+     *
+     * @return void
      */
     public function broadcastToChannel(string $channelName, string $message): void
     {
@@ -25,7 +33,9 @@ class Broadcaster implements BroadcasterInterface
     /**
      * Вещает сообщение всем подписчикам.
      *
-     * @param string $message Сообщение для отправки.
+     * @param string $message Сообщение для отправки всем подписчикам.
+     *
+     * @return void
      */
     public function broadcastToAll(string $message): void
     {

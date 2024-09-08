@@ -2,42 +2,26 @@
 
 namespace App\WebSocket\Core;
 
-use App\WebSocket\Clients\ClientManager;
-use App\WebSocket\Core\Contracts\RouterInterface;
 use App\WebSocket\Core\Contracts\WebSocketServerInterface;
-use App\WebSocket\Errors\Contracts\ErrorHandlerInterface;
-use App\WebSocket\Errors\ErrorHandler;
+use App\WebSocket\Facades\ClientManagerFacade;
+use App\WebSocket\Facades\ErrorHandlerFacade;
+use App\WebSocket\Facades\RedisAdapterFacade;
+use App\WebSocket\Facades\RouterFacade;
 use Exception;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
-use Redis;
 
 /**
  * Класс для обработки WebSocket соединений.
  * Реализует интерфейс MessageComponentInterface от Ratchet.
+ *
+ * @package App\WebSocket\Core
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class WebSocketServer implements MessageComponentInterface, WebSocketServerInterface
 {
-    private RouterInterface $router;
-    private ClientManager $clientManager;
-    private Redis $redis;
-    private ErrorHandlerInterface $errorHandler;
-
-    /**
-     * Конструктор класса, принимает WebSocketRouter и ErrorHandler.
-     */
-    public function __construct()
-    {
-        // Инициализация Redis
-        $this->redis = new Redis();
-        $this->redis->connect('127.0.0.1', 6379);
-
-        // Инициализация других зависимостей
-        $this->router = WebSocketRouter::getInstance();
-        $this->clientManager = ClientManager::getInstance();
-        $this->errorHandler = ErrorHandler::getInstance();
-    }
-
     /**
      * Метод вызывается, когда клиент подключается к серверу.
      *
@@ -52,7 +36,7 @@ class WebSocketServer implements MessageComponentInterface, WebSocketServerInter
             echo "Новое подключение: {$conn->resourceId}\n";
 
             // Добавление соединения в клиентский менеджер
-            $this->clientManager->addClient($conn->resourceId, $conn);
+            ClientManagerFacade::addClient($conn->resourceId, $conn);
 
             // Подготовка данных для сохранения в Redis
             $connectionData = [
@@ -62,9 +46,19 @@ class WebSocketServer implements MessageComponentInterface, WebSocketServerInter
             ];
 
             // Сохранение данных в Redis
-            $this->redis->hSet('connections', $conn->resourceId, json_encode($connectionData));
+            RedisAdapterFacade::set('connection:' . $conn->resourceId, json_encode($connectionData));
+
+            $client = ClientManagerFacade::getClient($conn->resourceId);
+
+            // Отправляем сообщение клиенту
+            if ($client instanceof ConnectionInterface) {
+                $client->send("hello");
+                echo "Сообщение отправлено клиенту {$conn->resourceId}\n";
+            } else {
+                echo "Ошибка: клиент не найден или не является экземпляром ConnectionInterface\n";
+            }
         } catch (Exception $e) {
-            $this->errorHandler->handle($e);
+            ErrorHandlerFacade::handle($e);
         }
     }
 
@@ -80,10 +74,10 @@ class WebSocketServer implements MessageComponentInterface, WebSocketServerInter
     {
         try {
             // Передаем сообщение в маршрутизатор для обработки
-            $this->router->route($conn, $msg);
+            RouterFacade::route($conn, $msg);
             echo "Сообщение получено: {$msg->getPayload()}\n";
         } catch (Exception $e) {
-            $this->errorHandler->handle($e);
+            ErrorHandlerFacade::handle($e);
         }
     }
 
@@ -100,9 +94,9 @@ class WebSocketServer implements MessageComponentInterface, WebSocketServerInter
             // Логика обработки закрытия соединения
             echo "Соединение закрыто: {$conn->resourceId}\n";
             // Удаление соединения из клиентского менеджера
-            $this->clientManager->removeClient($conn->resourceId);
+            ClientManagerFacade::removeClient($conn->resourceId);
         } catch (Exception $e) {
-            $this->errorHandler->handle($e);
+            ErrorHandlerFacade::handle($e);
         }
     }
 
@@ -122,9 +116,9 @@ class WebSocketServer implements MessageComponentInterface, WebSocketServerInter
             $conn->close();
 
             // Передача ошибки в обработчик
-            $this->errorHandler->handle($e);
+            ErrorHandlerFacade::handle($e);
         } catch (Exception $e) {
-            $this->errorHandler->handle($e);
+            ErrorHandlerFacade::handle($e);
         }
     }
 }

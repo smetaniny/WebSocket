@@ -1,0 +1,39 @@
+@startuml
+
+left to right direction
+
+skinparam class {
+  FontSize 12
+  AttributeFontSize 12
+  OperationFontSize 12
+}
+skinparam note {
+  FontSize 12
+}
+skinparam arrow {
+  Thickness 1
+}
+skinparam padding 10
+skinparam linetype ortho
+skinparam ranksep 50
+skinparam nodesep 30
+
+class SingletonTrait {
+    <<trait>>
+    - static $instance: SingletonTrait
+    +getInstance(): SingletonTrait
+    -__construct(): void
+    -__clone(): void
+}
+
+note bottom of SingletonTrait
+  Паттерн: Singleton
+
+  Описание:
+  - Единственное свойство $instance хранит экземпляр класса
+  - Приватные методы __construct и __clone предотвращают создание
+    новых экземпляров и клонирование
+  - Метод getInstance возвращает единственный экземпляр класса
+end note
+
+@enduml

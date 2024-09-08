@@ -9,7 +9,17 @@ use Ratchet\WebSocket\WsServer;
 use Ratchet\Server\IoServer;
 use App\WebSocket\Core\WebSocketServer;
 
-// Объявляем класс WebSocketServerManager, который будет управлять нашим WebSocket сервером
+/**
+ * Класс для управления запуском, остановкой и перезапуском WebSocket сервера.
+ *
+ * Этот класс обеспечивает функциональность для запуска, остановки и перезапуска сервера WebSocket,
+ * а также управляет созданием и удалением PID файла для отслеживания состояния сервера.
+ *
+ * @package App\WebSocket\Console
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class WebSocketServerManager
 {
     // Переменная для хранения пути к PID файлу

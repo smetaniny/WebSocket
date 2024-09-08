@@ -4,6 +4,11 @@ namespace App\WebSocket\Redis\Contracts;
 
 /**
  * Интерфейс для работы с Redis.
+ *
+ * @package App\WebSocket\Redis\Contracts
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 interface RedisInterface
 {

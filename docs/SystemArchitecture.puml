@@ -39,12 +39,17 @@ package "WebSocket System" {
     class ChannelManager {
         +manageSubscriptions()
         +distributeMessages()
-        ' Комментарий: Управляет подписками и распределением сообщений.
+        +handlePresence()
+        ' Комментарий: Управляет подписками, распределением сообщений и присутствием.
     }
     class SecurityModule {
         +authenticate()
         +authorize()
         ' Комментарий: Отвечает за аутентификацию и авторизацию.
+    }
+    class ChannelAuthorization {
+        +authorizeUser()
+        ' Комментарий: Проверяет доступ пользователя к каналу.
     }
     class BroadcastingModule {
         +broadcastMessage()
@@ -53,6 +58,7 @@ package "WebSocket System" {
     class MonitoringModule {
         +logEvents()
         +monitorSystem()
+        +collectMetrics()
         ' Комментарий: Осуществляет мониторинг и логирование.
     }
     class Queue {
@@ -80,6 +86,15 @@ package "WebSocket System" {
         +manageChannelData()
         ' Комментарий: Управляет данными каналов.
     }
+    class RateLimiter {
+        +limitRequests()
+        ' Комментарий: Ограничивает количество запросов от клиента.
+    }
+    class WebSocketHandlers {
+        +handleMessage()
+        +handleEvent()
+        ' Комментарий: Обрабатывает сообщения и события от клиентов.
+    }
 
     ' Связи между классами
     ErrorHandler -[COLOR_CLASS]-> ExceptionLogger : логирует исключения (ExceptionLogger)
@@ -87,18 +102,20 @@ package "WebSocket System" {
     HttpServer -[COLOR_CLASS]-> WsServer : передает запросы (WsServer)
     WsServer -[COLOR_CLASS]-> WebSocketRouter : маршрутизирует сообщение (WebSocketRouter)
     WsServer -[COLOR_CLASS]-> ClientManager : управляет соединениями (ClientManager)
-    WsServer -[COLOR_CLASS]-> ChannelManager : управляет каналами (ChannelManager)
-    ChannelManager -[COLOR_CLASS]-> WebSocketRouter : маршрутизация в каналы (WebSocketRouter)
-    WebSocketRouter -[COLOR_CLASS]-> PublicChannel : маршрутизация в публичный канал (PublicChannel)
-    WebSocketRouter -[COLOR_CLASS]-> PrivateChannel : маршрутизация в приватный канал (PrivateChannel)
-    WebSocketRouter -[COLOR_CLASS]-> PresenceChannel : маршрутизация в канал присутствия (PresenceChannel)
+    WsServer -[COLOR_CLASS]-> SecurityModule : проверяет аутентификацию (SecurityModule)
+    SecurityModule -[COLOR_CLASS]-> ChannelAuthorization : проверяет доступ к каналу (ChannelAuthorization)
+    WsServer -[COLOR_CLASS]-> WebSocketHandlers : обрабатывает сообщения и события (WebSocketHandlers)
     ClientManager -[COLOR_CLASS]-> SecurityModule : проверяет подлинность (SecurityModule)
+    ChannelManager -[COLOR_CLASS]-> WebSocketRouter : маршрутизация в каналы (WebSocketRouter)
     ChannelManager -[COLOR_CLASS]-> BroadcastingModule : рассылка сообщений (BroadcastingModule)
     ChannelManager -[COLOR_CLASS]-> MonitoringModule : мониторинг активности (MonitoringModule)
+    ChannelManager -[COLOR_CLASS]-> RateLimiter : ограничение запросов (RateLimiter)
+    ChannelManager -[COLOR_CLASS]-> WebSocketHandlers : обработка сообщений и событий (WebSocketHandlers)
+    ChannelManager -[COLOR_CLASS]-> Redis : кэширование данных (Redis)
+    ChannelManager -[COLOR_CLASS]-> ChannelFactory : создание каналов (ChannelFactory)
+    MonitoringModule -[COLOR_CLASS]-> Redis : хранение метрик (Redis)
     BroadcastingModule -[COLOR_CLASS]-> Queue : обработка асинхронных задач (Queue)
     Queue -[COLOR_CLASS]-> Redis : поддерживает IPC и кэширование (Redis)
-    ChannelManager -[COLOR_CLASS]-> ChannelFactory : использует для создания каналов (ChannelFactory)
-    WsServer -[COLOR_CLASS]-> ChannelFactory : использует для создания каналов (ChannelFactory)
     IoServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)
     HttpServer -[COLOR_CLASS]-> ErrorHandler : передает ошибки (ErrorHandler)
     WsServer -[COLOR_CLASS]-> ErrorHandler : обрабатывает ошибки (ErrorHandler)

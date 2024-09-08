@@ -6,6 +6,11 @@ use App\WebSocket\Queues\Contracts\QueueInterface;
 
 /**
  * Реализация интерфейса QueueInterface для работы с очередями.
+ *
+ * @package App\WebSocket\Queues
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Queue implements QueueInterface
 {

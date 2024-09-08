@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Redis as LaravelRedis;
 
 /**
  * Адаптер для работы с Redis, используя Laravel Redis фасад.
+ *
+ * @package App\WebSocket\Redis
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class RedisAdapter implements RedisInterface
 {

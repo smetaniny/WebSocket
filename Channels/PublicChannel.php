@@ -5,15 +5,30 @@ namespace App\WebSocket\Channels;
 use App\WebSocket\Channels\Contracts\ChannelInterface;
 use Ratchet\ConnectionInterface;
 
+/**
+ * Реализация публичного канала для подписки и отправки сообщений.
+ *
+ * @package App\WebSocket\Channels
+ * @author Smetanin Sergey
+ * @version 1.0.0
+ * @since 1.0.0
+ */
 class PublicChannel implements ChannelInterface
 {
-    // Массив для хранения объектов соединений клиентов
+    /**
+     * Массив для хранения объектов соединений клиентов.
+     * Ключом является уникальный идентификатор клиента.
+     *
+     * @var array
+     */
     protected array $subscribers = [];
 
     /**
      * Подписывает клиента на канал.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function subscribe(ConnectionInterface $conn): void
     {
@@ -36,6 +51,8 @@ class PublicChannel implements ChannelInterface
      * Отписывает клиента от канала.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
+     * @return void
      */
     public function unsubscribe(ConnectionInterface $conn): void
     {
@@ -58,6 +75,8 @@ class PublicChannel implements ChannelInterface
      * Отправляет сообщение всем подписчикам канала.
      *
      * @param string $message Сообщение для отправки.
+     *
+     * @return void
      */
     public function broadcast(string $message): void
     {
@@ -74,12 +93,13 @@ class PublicChannel implements ChannelInterface
      * Получает уникальный идентификатор клиента из объекта соединения.
      *
      * @param ConnectionInterface $conn Объект соединения клиента.
+     *
      * @return string Уникальный идентификатор клиента.
      */
     protected function getClientId(ConnectionInterface $conn): string
     {
         // В реальной реализации можно использовать ID из соединения
-        // Например, вы можете использовать IP-адрес, уникальный идентификатор сессии или другие данные
+        // Например, IP-адрес, уникальный идентификатор сессии или другие данные
         return (string) $conn->resourceId;
     }
 }
