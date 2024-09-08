@@ -25,4 +25,4 @@
   системы.
 - **[System Analysis & Design](docs/SystemAnalysisDesign.md)**: Анализ системных требований и архитектурный
   дизайн системы.
-- **[System Architecture](docs/SystemArchitecture.puml)**: Диаграмма архитектуры системы в формате PlantUML.
+- **[System Architecture](docs/SystemArchitecture.png)**: Диаграмма архитектуры системы в формате PlantUML.
