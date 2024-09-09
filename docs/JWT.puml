@@ -1,0 +1,78 @@
+@startuml
+title WebSocket and Laravel Integration with JWT-based Authentication
+
+top to bottom direction
+
+!define COLOR_PAIR1 #4F4F4F
+!define COLOR_PAIR2 #4c94e0
+!define COLOR_PAIR3 #2E8B57
+!define COLOR_PAIR4 #00a693
+!define COLOR_PAIR5 #B8860B
+!define COLOR_PAIR6 #8B0000
+!define COLOR_PAIR7 #006600
+!define COLOR_PAIR8 #964b00
+
+package "WebSocket System" {
+
+    class WsServer {
+        +processWebSocketRequest()
+        +routeMessage()
+        +verifyJWT()
+        ' Комментарий: Проверяет JWT и маршрутизирует сообщения.
+    }
+
+    class ClientManager {
+        +trackActiveConnections()
+        +manageClient()
+        ' Комментарий: Отслеживает и управляет активными соединениями.
+    }
+
+    class Redis {
+        +cacheData()
+        +handleInterProcessCommunication()
+        ' Комментарий: Кэширует данные о соединениях и поддерживает IPC.
+    }
+
+    class WebSocketHandlers {
+        +handleMessage()
+        ' Комментарий: Обрабатывает сообщения клиентов.
+    }
+
+    WsServer --> Redis : <color:#4F4F4F>хранит WebSocket-соединения</color>
+    ClientManager --> Redis : <color:#4F4F4F>отслеживает соединения</color>
+    WebSocketHandlers --> WsServer : <color:#4c94e0>обработка сообщений</color>
+    WsServer --> ClientManager : <color:#4c94e0>передает данные о пользователе</color>
+}
+
+package "Laravel System" {
+    class LaravelApp {
+        +authenticateUser()
+        +generateJWT()
+        +sendMessageToUser()
+        ' Комментарий: Генерирует JWT и отправляет сообщения через WebSocket.
+    }
+
+    class UserTable {
+        +userData()
+        ' Комментарий: Содержит данные пользователей.
+    }
+
+    LaravelApp --> UserTable : <color:#4F4F4F>аутентификация</color>
+    LaravelApp --> Redis : <color:#4F4F4F>обновление сессий пользователя</color>
+    LaravelApp --> WsServer : <color:#4c94e0>отправка сообщений через WebSocket</color>
+}
+
+package "JWT Token" {
+    class JWT {
+        +userId
+        +expiration
+        +issuedAt
+        ' Комментарий: Хранит информацию о пользователе.
+    }
+
+    LaravelApp --> JWT : <color:#B8860B>создает JWT</color>
+    WsServer --> JWT : <color:#B8860B>проверяет JWT</color>
+    Redis --> JWT : <color:#B8860B>хранит информацию о сессиях</color>
+}
+
+@enduml
