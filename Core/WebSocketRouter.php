@@ -48,7 +48,7 @@ class WebSocketRouter implements RouterInterface
                 $this->handleUnsubscribe($conn, $data);
                 break;
 
-            case 'message':
+                case 'message':
                 $this->handleMessage($conn, $data);
                 break;
 

@@ -1,8 +1,9 @@
 @startuml
-title WebSocket and Laravel Integration with JWT-based Authentication
+title System Architecture WebSocket with Laravel Integration and Sanctum
 
 top to bottom direction
 
+' Определяем палитру цветов для стрелок
 !define COLOR_PAIR1 #4F4F4F
 !define COLOR_PAIR2 #4c94e0
 !define COLOR_PAIR3 #2E8B57
@@ -12,67 +13,177 @@ top to bottom direction
 !define COLOR_PAIR7 #006600
 !define COLOR_PAIR8 #964b00
 
+' Синхронные и асинхронные вызовы
+skinparam Arrow {
+    Color COLOR_PAIR1
+    Thickness 1
+    ArrowColor COLOR_PAIR1
+}
+
 package "WebSocket System" {
 
+    ' Классы WebSocket
+    class ErrorHandler {
+        +handleError()
+        ' Комментарий: Обрабатывает ошибки и логирует исключения.
+    }
+
+    class IoServer {
+        +handleConnection()
+        ' Комментарий: Обрабатывает входящие соединения.
+    }
+    class HttpServer {
+        +processHttpRequest()
+        ' Комментарий: Обрабатывает HTTP-запросы для WebSocket-соединений.
+    }
     class WsServer {
         +processWebSocketRequest()
         +routeMessage()
-        +verifyJWT()
-        ' Комментарий: Проверяет JWT и маршрутизирует сообщения.
+        ' Комментарий: Управляет WebSocket-соединениями и маршрутизацией сообщений.
     }
-
+    class WebSocketRouter {
+        +routeToChannel()
+        ' Комментарий: Маршрутизирует сообщения в соответствующие каналы.
+    }
     class ClientManager {
         +trackActiveConnections()
         +manageClient()
-        ' Комментарий: Отслеживает и управляет активными соединениями.
+        ' Комментарий: Управляет активными соединениями клиентов.
     }
-
+    class ChannelManager {
+        +manageSubscriptions()
+        +distributeMessages()
+        +handlePresence()
+        ' Комментарий: Управляет подписками, распределением сообщений и присутствием.
+    }
+    class SecurityModule {
+        +authenticate()
+        +authorize()
+        ' Комментарий: Отвечает за аутентификацию и авторизацию.
+    }
+    class ChannelAuthorization {
+        +authorizeUser()
+        ' Комментарий: Проверяет доступ пользователя к каналу.
+    }
+    class BroadcastingModule {
+        +broadcastMessage()
+        ' Комментарий: Отвечает за рассылку сообщений.
+    }
+    class MonitoringModule {
+        +logEvents()
+        +monitorSystem()
+        +collectMetrics()
+        ' Комментарий: Осуществляет мониторинг и логирование.
+    }
+    class Queue {
+        +handleAsyncTasks()
+        ' Комментарий: Управляет асинхронными задачами и обработкой сообщений.
+    }
     class Redis {
         +cacheData()
         +handleInterProcessCommunication()
-        ' Комментарий: Кэширует данные о соединениях и поддерживает IPC.
+        ' Комментарий: Кэширует данные и обеспечивает IPC.
     }
-
+    class ChannelFactory {
+        +createChannel()
+        ' Комментарий: Создает различные типы каналов.
+    }
+    class ExceptionLogger {
+        +logException()
+        ' Комментарий: Логирует исключения.
+    }
+    class UserRepository {
+        +manageUserData()
+        ' Комментарий: Управляет данными пользователей.
+    }
+    class ChannelRepository {
+        +manageChannelData()
+        ' Комментарий: Управляет данными каналов.
+    }
+    class RateLimiter {
+        +limitRequests()
+        ' Комментарий: Ограничивает количество запросов от клиента.
+    }
     class WebSocketHandlers {
         +handleMessage()
-        ' Комментарий: Обрабатывает сообщения клиентов.
+        +handleEvent()
+        ' Комментарий: Обрабатывает сообщения и события от клиентов.
     }
 
-    WsServer --> Redis : <color:#4F4F4F>хранит WebSocket-соединения</color>
-    ClientManager --> Redis : <color:#4F4F4F>отслеживает соединения</color>
-    WebSocketHandlers --> WsServer : <color:#4c94e0>обработка сообщений</color>
-    WsServer --> ClientManager : <color:#4c94e0>передает данные о пользователе</color>
+    ' Классы Laravel
+    package "Laravel System" {
+        class LaravelApp {
+            +authenticateUser()
+            +associateWebSocketConnection()
+            +sendMessageToUser()
+            ' Комментарий: Аутентифицирует пользователя и связывает его с WebSocket-соединением.
+        }
+
+        class UserTable {
+            +userData()
+            ' Комментарий: Содержит информацию о пользователях, связанная с WebSocket.
+        }
+
+        class SanctumToken {
+            +token
+            +expiration
+            +userId
+            ' Комментарий: Содержит информацию о токене, используемом для аутентификации.
+        }
+
+        LaravelApp --> UserTable : <color:#4F4F4F>синхронное: аутентификация пользователя</color>
+        LaravelApp --> Redis : <color:#4F4F4F>синхронное: связывает пользователя с WebSocket ID</color>
+        LaravelApp --> SanctumToken : <color:#4F4F4F>синхронное: управление токенами</color>
+        LaravelApp -[dashed]-> WsServer : <color:#00a693>асинхронное: отправляет сообщение пользователю</color>
+    }
+
+
+    ' Добавляем Android-приложение
+    package "Android Application" {
+        class AndroidApp {
+            +sendMessage()
+            +receiveMessage()
+            +authenticate()
+            ' Комментарий: Отправляет и получает сообщения, а также аутентифицируется в системе.
+        }
+
+        AndroidApp -[dashed]-> WsServer : <color:#4c94e0>синхронное: отправляет и получает сообщения</color>
+        AndroidApp -[dashed]-> LaravelApp : <color:#00a693>асинхронное: отправляет запросы аутентификации и получения данных</color>
+        AndroidApp -[dashed]-> SanctumToken : <color:#00a693>асинхронное: получает и использует токен</color>
+    }
+
+    ' Связи между компонентами WebSocket
+    IoServer --> HttpServer : <color:#4F4F4F>синхронное: обрабатывает соединение</color>
+    IoServer --> ErrorHandler : <color:#4F4F4F>синхронное: обрабатывает ошибки</color>
+    HttpServer --> WsServer : <color:#4F4F4F>синхронное: передает запросы</color>
+    HttpServer --> ErrorHandler : <color:#4F4F4F>синхронное: передает ошибки</color>
+    WsServer --> WebSocketRouter : <color:#4c94e0>синхронное: маршрутизация сообщений</color>
+    WsServer --> ClientManager : <color:#4c94e0>синхронное: управление соединениями</color>
+    WsServer --> SecurityModule : <color:#4c94e0>синхронное: проверяет аутентификацию</color>
+    WsServer --> WebSocketHandlers : <color:#4c94e0>синхронное: обрабатывает сообщения</color>
+    WsServer --> ErrorHandler : <color:#4c94e0>синхронное: обрабатывает ошибки</color>
+    ClientManager --> SecurityModule : <color:#2E8B57>синхронное: проверяет подлинность</color>
+    ClientManager --> UserRepository : <color:#2E8B57>синхронное: управление данными</color>
+    ClientManager --> ErrorHandler : <color:#2E8B57>синхронное: передача ошибок</color>
+    SecurityModule --> ChannelAuthorization : <color:#8B0000>синхронное: проверка доступа</color>
+    SecurityModule --> ErrorHandler : <color:#8B0000>синхронное: обработка ошибок</color>
+    ChannelAuthorization --> ChannelManager : <color:#8B0000>синхронное: проверка доступа к каналам</color>
+    ChannelManager --> WebSocketRouter : <color:#B8860B>синхронное: маршрутизация каналов</color>
+    ChannelManager --> BroadcastingModule : <color:#B8860B>синхронное: рассылка сообщений</color>
+    ChannelManager --> MonitoringModule : <color:#B8860B>синхронное: мониторинг активности</color>
+    ChannelManager --> RateLimiter : <color:#B8860B>синхронное: ограничение запросов</color>
+    ChannelManager --> WebSocketHandlers : <color:#B8860B>синхронное: обработка сообщений</color>
+    ChannelManager --> Redis : <color:#B8860B>синхронное: кэширование данных</color>
+    ChannelManager --> ChannelFactory : <color:#B8860B>синхронное: создание каналов</color>
+    ChannelManager --> ErrorHandler : <color:#B8860B>синхронное: передача ошибок</color>
+    ChannelManager --> ChannelRepository : <color:#B8860B>синхронное: управление данными каналов</color>
+    MonitoringModule --> Redis : <color:#4F4F4F>синхронное: хранение метрик</color>
+    BroadcastingModule -[dashed]-> Queue : <color:#00a693>асинхронное: обработка задач</color>
+    BroadcastingModule --> ErrorHandler : <color:#00a693>синхронное: обработка ошибок</color>
+    Queue -[dashed]-> Redis : <color:#964b00>асинхронное: поддержка IPC и кэширование</color>
+    Queue --> ErrorHandler : <color:#964b00>синхронное: передача ошибок</color>
+    WebSocketRouter --> ErrorHandler : <color:#006600>синхронное: отправка ошибок</color>
+    RateLimiter --> WebSocketHandlers : <color:#006600>синхронное: ограничение запросов</color>
+    ErrorHandler -[COLOR_PAIR6]-> ExceptionLogger : <color:#8B0000>логирует исключения</color>
 }
-
-package "Laravel System" {
-    class LaravelApp {
-        +authenticateUser()
-        +generateJWT()
-        +sendMessageToUser()
-        ' Комментарий: Генерирует JWT и отправляет сообщения через WebSocket.
-    }
-
-    class UserTable {
-        +userData()
-        ' Комментарий: Содержит данные пользователей.
-    }
-
-    LaravelApp --> UserTable : <color:#4F4F4F>аутентификация</color>
-    LaravelApp --> Redis : <color:#4F4F4F>обновление сессий пользователя</color>
-    LaravelApp --> WsServer : <color:#4c94e0>отправка сообщений через WebSocket</color>
-}
-
-package "JWT Token" {
-    class JWT {
-        +userId
-        +expiration
-        +issuedAt
-        ' Комментарий: Хранит информацию о пользователе.
-    }
-
-    LaravelApp --> JWT : <color:#B8860B>создает JWT</color>
-    WsServer --> JWT : <color:#B8860B>проверяет JWT</color>
-    Redis --> JWT : <color:#B8860B>хранит информацию о сессиях</color>
-}
-
 @enduml
