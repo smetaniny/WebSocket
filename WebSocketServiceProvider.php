@@ -3,11 +3,11 @@
 namespace App\WebSocket;
 
 use App\WebSocket\Channels\ChannelManager;
-use App\WebSocket\Core\WebSocketRouter;
 use App\WebSocket\Clients\ClientManager;
 use App\WebSocket\Errors\ErrorHandler;
 use App\WebSocket\Errors\ExceptionLogger;
 use App\WebSocket\Redis\RedisAdapter;
+use App\WebSocket\Router\WebSocketRouter;
 use Illuminate\Support\ServiceProvider;
 
 class WebSocketServiceProvider extends ServiceProvider

@@ -13,7 +13,7 @@ top to bottom direction
 !define COLOR_PAIR7 #006600
 !define COLOR_PAIR8 #964b00
 
-' Синхронные и асинхронные вызовы
+' Настройка параметров стрелок для синхронных и асинхронных вызовов
 skinparam Arrow {
     Color COLOR_PAIR1
     Thickness 1
@@ -21,288 +21,237 @@ skinparam Arrow {
 }
 
 package "WebSocket System" {
-' Классы WebSocket
-    class ErrorHandler {
-        +handleError()
-        ' Комментарий: Обрабатывает ошибки и логирует исключения.
-        ' Этот класс отвечает за обработку ошибок, возникших в системе, и запись исключений для упрощения диагностики и устранения проблем.
+    ' Класс, представляющий команду для управления WebSocket-сервером
+    class WebSocketServerCommand {
+        + Определяем консольную команду для управления WebSocket сервером
     }
 
+    ' Класс для управления WebSocket-сервером
+    class WebSocketServerManager {
+        + Управляет запуском, остановкой и перезапуском WebSocket сервера.
+    }
+
+    ' IoServer управляет сетевыми соединениями и передает HTTP-запросы
     class IoServer {
-        +handleConnection()
-        ' Комментарий: Обрабатывает входящие соединения.
-        ' Управляет сетевыми соединениями, устанавливая и поддерживая связь между клиентами и сервером.
+        + Создаем WebSocket сервер с помощью фабрики IoServer
     }
 
+    ' HttpServer обрабатывает HTTP-запросы для WebSocket
     class HttpServer {
-        +processHttpRequest()
-        ' Комментарий: Обрабатывает HTTP-запросы для WebSocket-соединений.
-        ' Обрабатывает запросы HTTP, которые необходимы для установления и управления WebSocket-соединениями.
+        + Создает HTTP сервер
     }
 
+    ' Класс WsServer отвечает за маршрутизацию запросов
     class WsServer {
-        +processWebSocketRequest()
-        +routeMessage()
-        ' Комментарий: Управляет WebSocket-соединениями и маршрутизацией сообщений.
-        ' Отвечает за обработку WebSocket-запросов и маршрутизацию сообщений между клиентами и серверами.
+        + Отвечает за обработку WebSocket-соединений в Ratchet
     }
 
+    ' Основной WebSocket-сервер, наследующий интерфейс обработки сообщений
+    class WebSocketServer {
+        + Обрабатывает WebSocket соединения.
+        +onOpen() Метод обработки открытия соединения
+        +onMessage() Метод обработки отправки сообщения на сервер
+        +onClose() Метод обработки закрытия соединения клиентом
+        +onError() Метод обработки ошибок в соединениях
+    }
+
+    ' ErrorHandler управляет ошибками и логирует исключения
+    class ErrorHandler {
+        +handleError() ' Метод для обработки ошибок
+    }
+
+    ' RouteHandler определяет, публичный маршрут, приватный или WebSocket канал
+    class RouteHandler {
+        +handleRequest(route) Основной метод для обработки маршрутов
+        +isPublicRoute(route) Проверка на публичный маршрут
+        +isPrivateRoute(route) Проверка на приватный маршрут
+        +isWebSocketChannel(route) Проверка на маршрут WebSocket-канала
+    }
+
+    ' WebSocketRouter маршрутизирует сообщения на нужные каналы
     class WebSocketRouter {
-        +routeToChannel()
-        ' Комментарий: Определяет маршрут сообщения к соответствующему каналу на основе авторизации и других факторов.
-        ' Осуществляет маршрутизацию сообщений к нужным каналам в зависимости от авторизации и других условий.
+        ' Метод для маршрутизации сообщения к каналу
+        +route() Маршрутизация входящих WebSocket-сообщений на основе их типа события.
     }
 
+    ' ClientManager управляет активными клиентами и их соединениями
     class ClientManager {
-        +trackActiveConnections()
-        +manageClient()
-        ' Комментарий: Управляет активными соединениями клиентов.
-        ' Отслеживает активные соединения и управляет состоянием взаимодействий с клиентами.
+        +addClient() Добавляет клиента в менеджер
+        +removeClient() Удаляет клиента из менеджера
+        +getClient() Возвращает объект соединения клиента по его идентификатору
+        +getClients() Возвращает всех клиентов
     }
 
+    ' ChannelManager управляет подписками и распределяет сообщения
     class ChannelManager {
-        +manageSubscriptions()
-        +distributeMessages()
-        +handlePresence()
-        ' Комментарий: Управляет подписками, распределением сообщений и присутствием.
-        ' Управляет подписками пользователей на каналы, распределяет сообщения и отслеживает присутствие пользователей в каналах.
+        +subscribe() Подписывает клиента на канал
+        +unsubscribe() Отписывает клиента от канала
+        +broadcast() Отправляет сообщение всем подписчикам канала
     }
 
-    class SecurityModule {
-        +authenticate()
-        +authorize()
-        ' Комментарий: Этот класс отвечает за два основных аспекта безопасности:
-        ' 1. Аутентификация: Проверяет, что пользователь является тем, за кого себя выдает.
-        ' 2. Авторизация: Определяет, имеет ли аутентифицированный пользователь права на доступ к конкретным ресурсам или действиям.
+    ' Управление общей аутентификацией и авторизацией пользователя на уровне системы
+    class Security {
+        +authenticate() Аутентификация (authenticate) Проверка пользователя
+        (удостоверение его личности через токен Sanctum)
+        +authorize() Проверка прав пользователя для доступа к различным частям системы
+        (общий доступ, возможно, через роли, разрешения и т.п.).
     }
 
-    class ChannelAuthorization {
-        +authorizeUser()
-        ' Комментарий: Этот класс специализируется на проверке прав доступа пользователя к конкретным каналам.
-        ' Он проверяет, может ли пользователь взаимодействовать с каналом на основе предоставленных разрешений или подписок.
-    }
-
+    ' BroadcastingModule управляет рассылкой сообщений
     class BroadcastingModule {
+        ' Рассылка сообщений
         +broadcastMessage()
-        ' Комментарий: Отвечает за рассылку сообщений.
-        ' Управляет рассылкой сообщений между клиентами или каналами, обеспечивая их доставку.
     }
 
+    ' MonitoringModule мониторит систему и собирает метрики
     class MonitoringModule {
-        +logEvents()
-        +monitorSystem()
-        +collectMetrics()
-        ' Комментарий: Осуществляет мониторинг и логирование.
-        ' Сбор метрик, мониторинг состояния системы и запись событий для анализа и улучшения работы системы.
+        +logEvents() ' Логирование событий
+        +monitorSystem() ' Мониторинг состояния системы
+        +collectMetrics() ' Сбор метрик
     }
 
-    class Queue {
-        +handleAsyncTasks()
-        ' Комментарий: Управляет асинхронными задачами и обработкой сообщений.
-        ' Обеспечивает выполнение фоновых операций и обработку асинхронных задач.
-    }
-
-    class Redis {
-        +cacheData()
-        +handleInterProcessCommunication()
-        ' Комментарий: Кэширует данные и обеспечивает IPC.
-        ' Используется для кэширования данных для быстрого доступа и обеспечения коммуникации между процессами.
-    }
-
-    class ChannelFactory {
-        +createChannel()
-        ' Комментарий: Создает различные типы каналов.
-        ' Отвечает за создание и настройку различных типов каналов для обмена сообщениями.
-    }
-
+    ' Логирование исключений
     class ExceptionLogger {
-        +logException()
-        ' Комментарий: Логирует исключения.
-        ' Записывает информацию об исключениях и ошибках для последующего анализа и устранения.
+        +logException() ' Логирование исключений
     }
 
+    ' ChannelFactory создает каналы для обмена сообщениями
+    class ChannelFactory {
+        ' Создание нового канала
+        +createChannel()
+    }
+
+    ' ChannelRepository управляет данными каналов
     class ChannelRepository {
+        ' Управление данными каналов
         +manageChannelData()
-        ' Комментарий: Управляет данными каналов.
-        ' Обеспечивает создание, обновление и удаление данных, связанных с каналами.
     }
 
+    ' RateLimiter ограничивает количество запросов от клиентов
     class RateLimiter {
+        ' Ограничение запросов
         +limitRequests()
-        ' Комментарий: Ограничивает количество запросов от клиента.
-        ' Регулирует количество запросов, которые клиент может отправлять, предотвращая злоупотребления и перегрузки.
-    }
-  ' Классы Laravel
-    package "Client applications" {
-        class LaravelApp {
-            +authenticateUser()
-            +associateWebSocketConnection()
-            +sendMessageToUser()
-            ' Комментарий: Этот класс управляет взаимодействием с пользователями в системе.
-            ' 1. Аутентификация: Проверяет учетные данные пользователей для входа в систему.
-            ' 2. Связывание WebSocket: Устанавливает и управляет WebSocket-соединениями для пользователей.
-            ' 3. Отправка сообщений: Позволяет отправлять сообщения пользователям.
-        }
-
-        class UserTable {
-            +userData()
-            ' Комментарий: Хранит данные о пользователях, которые связаны с WebSocket-соединениями.
-            ' Содержит информацию о пользователях, такую как их учетные записи и статусы подключения.
-        }
-
-        class SanctumToken {
-            +token
-            +expiration
-            +userId
-            ' Комментарий: Содержит информацию о токенах, которые используются для аутентификации пользователей.
-            ' 1. Токен: Уникальный идентификатор для аутентификации пользователя.
-            ' 2. Срок действия: Время, до которого токен остается действительным.
-            ' 3. Идентификатор пользователя: ID пользователя, которому принадлежит токен.
-        }
-
-        LaravelApp --> UserTable
-        ' Комментарий: LaravelApp взаимодействует с UserTable для получения информации о пользователях.
-
-        LaravelApp --> Redis
-        ' Комментарий: LaravelApp использует Redis для хранения и получения данных, связанных с сессиями или кэшированием.
-
-        LaravelApp --> SanctumToken
-        ' Комментарий: LaravelApp использует SanctumToken для аутентификации пользователей.
-
-        LaravelApp -[dashed]-> WsServer
-        ' Комментарий: LaravelApp взаимодействует с WebSocket-сервером для обмена сообщениями через WebSocket (с использованием асинхронного соединения).
-
-        class AdminPanel {
-            +authenticate()
-            +sendMessageToUser()
-            +receiveMessages()
-            ' Комментарий: Этот класс управляет административной панелью для взаимодействия с пользователями.
-            ' 1. Аутентификация: Проверяет учетные данные администратора для доступа к панели.
-            ' 2. Отправка сообщений: Позволяет администраторам отправлять сообщения пользователям.
-            ' 3. Получение сообщений: Позволяет администраторам получать сообщения от пользователей.
-        }
-
-        AdminPanel -[dashed]-> WsServer
-        ' Комментарий: AdminPanel взаимодействует с WebSocket-сервером для отправки и получения сообщений (асинхронно).
-
-        AdminPanel --> LaravelApp : Получение токена
-        ' Комментарий: AdminPanel получает токены аутентификации от LaravelApp для проверки подлинности.
-
-        class IOS {
-            +sendMessage()
-            +receiveMessage()
-            +authenticate()
-            ' Комментарий: Этот класс представляет приложение для iOS, которое взаимодействует с сервером.
-            ' 1. Отправка сообщений: Позволяет отправлять сообщения.
-            ' 2. Получение сообщений: Позволяет получать сообщения.
-            ' 3. Аутентификация: Позволяет пользователю войти в систему.
-        }
-
-        IOS -[dashed]-> WsServer
-        ' Комментарий: IOS-приложение взаимодействует с WebSocket-сервером для отправки и получения сообщений (асинхронно).
-
-        IOS --> LaravelApp : Получение токена
-        ' Комментарий: IOS-приложение получает токены аутентификации от LaravelApp для доступа к системе.
-
-        class AndroidApp {
-            +sendMessage()
-            +receiveMessage()
-            +authenticate()
-            ' Комментарий: Этот класс представляет Android-приложение для взаимодействия с сервером.
-            ' 1. Отправка сообщений: Позволяет отправлять сообщения.
-            ' 2. Получение сообщений: Позволяет получать сообщения.
-            ' 3. Аутентификация: Позволяет пользователю войти в систему.
-        }
-
-        AndroidApp -[dashed]-> WsServer
-        ' Комментарий: Android-приложение взаимодействует с WebSocket-сервером для отправки и получения сообщений (асинхронно).
-
-        AndroidApp --> LaravelApp : Получение токена
-        ' Комментарий: Android-приложение получает токены аутентификации от LaravelApp для доступа к системе.
     }
 
-    ' Связи между компонентами WebSocket
+    ' Обработчики сообщений
+    class ChatChannel {
+        +authorize() ' Проверка прав на доступ к каналу чата
+    }
 
-    HttpServer --> WsServer
-    ' Комментарий: HttpServer передает HTTP-запросы WebSocket-серверу (WsServer) для обработки WebSocket-соединений.
-
-    IoServer --> HttpServer
-    ' Комментарий: IoServer обрабатывает входящие соединения и передает их HttpServer для обработки HTTP-запросов.
-
-    WsServer --> WebSocketRouter
-    ' Комментарий: WsServer передает WebSocket-запросы WebSocketRouter для маршрутизации сообщений.
-
-    WsServer --> ErrorHandler
-    ' Комментарий: WsServer обращается к ErrorHandler для обработки и логирования ошибок, возникающих при обработке WebSocket-соединений.
-
-    WebSocketRouter --> SecurityModule
-    ' Комментарий: WebSocketRouter обращается к SecurityModule для проверки авторизации перед маршрутизацией сообщений.
-
-    SecurityModule --> LaravelApp : Проверка токена
-    ' Комментарий: SecurityModule отправляет запрос в LaravelApp для проверки токена аутентификации и получения подтверждения о правомерности доступа.
-
-    SecurityModule --> ChannelAuthorization
-    ' Комментарий: SecurityModule обращается к ChannelAuthorization для проверки прав доступа пользователя к конкретному каналу.
-
-    SecurityModule --> ClientManager
-    ' Комментарий: SecurityModule взаимодействует с ClientManager для получения информации о текущих соединениях и их статусах.
-
-    ChannelAuthorization --> LaravelApp : Проверка токена
-    ' Комментарий: ChannelAuthorization проверяет токен пользователя через LaravelApp, чтобы убедиться в его правомочности для доступа к каналу.
-
-    ChannelAuthorization --> ClientManager
-    ' Комментарий: ChannelAuthorization взаимодействует с ClientManager для проверки статуса пользователя и наличия активных соединений.
-
-    IoServer --> ErrorHandler
-    ' Комментарий: IoServer обращается к ErrorHandler для обработки и логирования ошибок, возникающих при установлении соединений.
-
-    HttpServer --> ErrorHandler
-    ' Комментарий: HttpServer обращается к ErrorHandler для обработки и логирования ошибок, возникающих при обработке HTTP-запросов.
-
-    ClientManager --> ErrorHandler
-    ' Комментарий: ClientManager взаимодействует с ErrorHandler для обработки и логирования ошибок, связанных с управлением клиентскими соединениями.
-
-    ClientManager --> ChannelManager
-    ' Комментарий: ClientManager передает информацию о клиентах и их соединениях в ChannelManager для дальнейшей обработки подписок и сообщений.
-
-    ChannelManager --> BroadcastingModule
-    ' Комментарий: ChannelManager обращается к BroadcastingModule для рассылки сообщений по подписанным каналам.
-
-    ChannelManager --> MonitoringModule
-    ' Комментарий: ChannelManager взаимодействует с MonitoringModule для мониторинга состояния каналов и активных подписок.
-
-    ChannelManager --> RateLimiter
-    ' Комментарий: ChannelManager использует RateLimiter для ограничения частоты запросов от клиентов, предотвращая злоупотребления.
-
-    ChannelManager --> Redis
-    ' Комментарий: ChannelManager использует Redis для хранения и получения данных о каналах и подписках.
-
-    ChannelManager --> ChannelFactory
-    ' Комментарий: ChannelManager взаимодействует с ChannelFactory для создания новых каналов по запросу.
-
-    ChannelManager --> ErrorHandler
-    ' Комментарий: ChannelManager обращается к ErrorHandler для обработки и логирования ошибок, возникающих при управлении каналами.
-
-    ChannelManager --> ChannelRepository
-    ' Комментарий: ChannelManager использует ChannelRepository для управления данными каналов, хранения и извлечения информации.
-
-    MonitoringModule --> Redis
-    ' Комментарий: MonitoringModule использует Redis для хранения и получения метрик и данных о состоянии системы.
-
-    BroadcastingModule -[dashed]-> Queue
-    ' Комментарий: BroadcastingModule взаимодействует с Queue для обработки асинхронных задач, связанных с рассылкой сообщений.
-
-    BroadcastingModule --> ErrorHandler
-    ' Комментарий: BroadcastingModule обращается к ErrorHandler для обработки и логирования ошибок при рассылке сообщений.
-
-    Queue -[dashed]-> Redis
-    ' Комментарий: Queue использует Redis для хранения задач и управления очередями сообщений.
-
-    Queue --> ErrorHandler
-    ' Комментарий: Queue взаимодействует с ErrorHandler для обработки и логирования ошибок, возникающих при выполнении асинхронных задач.
-
-    ErrorHandler --> ExceptionLogger
-    ' Комментарий: ErrorHandler передает информацию о возникающих исключениях в ExceptionLogger для их записи и анализа.
-
+    class FaqChannel {
+        +authorize() ' Проверка прав на доступ к каналу FAQ
+    }
 }
+
+' Laravel-классы
+package "Client applications" {
+    ' LaravelApp управляет аутентификацией и взаимодействием с WebSocket
+    class LaravelApp {
+        ' Аутентификация пользователя
+        +authenticateUser()
+        ' Ассоциация соединения WebSocket с пользователем
+        +associateWebSocketConnection()
+        ' Отправка сообщений пользователю
+        +sendMessageToUser()
+    }
+
+    ' Таблица с данными о пользователях
+    class UserTable {
+        +userData() ' Данные пользователя
+    }
+
+    ' SanctumToken содержит данные о токенах аутентификации
+    class SanctumToken {
+        +token
+        +expiration
+        +userId
+    }
+
+    ' Очередь для асинхронных задач
+    class Queue {
+        +handleAsyncTasks() ' Управление асинхронными задачами
+    }
+
+    ' Redis используется для кэширования данных и межпроцессного взаимодействия
+    class Redis {
+        ' Кэширование данных
+        +cacheData()
+        ' Межпроцессное взаимодействие
+        +handleInterProcessCommunication()
+    }
+}
+
+package "Admin Panel" {
+    ' Панель администратора для взаимодействия с пользователями
+    class AdminPanel {
+        +authenticate() ' Аутентификация администратора
+        +sendMessageToUser() ' Отправка сообщений пользователям
+        +receiveMessages() ' Получение сообщений от пользователей
+    }
+}
+
+package "iOS-приложение" {
+    ' iOS-приложение для взаимодействия с WebSocket
+    class IOS {
+        +sendMessage() ' Отправка сообщений
+        +receiveMessage() ' Получение сообщений
+        +authenticate() ' Аутентификация пользователя
+    }
+}
+
+package "Android-приложение" {
+    ' Android-приложение для взаимодействия с WebSocket
+    class AndroidApp {
+        +sendMessage() ' Отправка сообщений
+        +receiveMessage() ' Получение сообщений
+        +authenticate() ' Аутентификация пользователя
+    }
+}
+
+package "Security Module" {
+    class SecurityModule {
+        +Модуль авторизации / регистрации по токену
+    }
+}
+
+' Связи между объектами
+WsServer -> WebSocketServer
+AndroidApp -> WebSocketServer
+AdminPanel -> WebSocketServer
+IOS -> WebSocketServer
+WebSocketServer --> RouteHandler : Проверка маршрута
+WebSocketServer --> ErrorHandler
+RouteHandler --> ClientManager : Публичный маршрут
+RouteHandler --> Security : Приватный маршрут
+Security --> ClientManager : Прошел проверку
+Security --> SecurityModule : Запрос в модуль
+SecurityModule --> LaravelApp
+SecurityModule --> Security : Ответ модуля
+MonitoringModule --> Redis
+BroadcastingModule -[dashed]-> Queue
+AndroidApp --> LaravelApp : Получение токена
+IOS --> LaravelApp : Получение токена
+LaravelApp --> UserTable
+LaravelApp --> Redis
+LaravelApp --> SanctumToken
+Queue -[dashed]-> Redis
+AdminPanel --> LaravelApp : Получение токена
+HttpServer -> WsServer
+IoServer -> HttpServer
+WebSocketServerManager -> IoServer
+WebSocketServerCommand -> WebSocketServerManager
+ChannelManager --> BroadcastingModule
+ChannelManager --> MonitoringModule
+ChannelManager --> RateLimiter
+ChannelManager --> Redis
+ChannelManager --> ChannelFactory
+ChannelManager --> ErrorHandler
+ChannelManager --> ChannelRepository
+ClientManager --> ErrorHandler
+ClientManager --> WebSocketRouter
+WebSocketRouter --> ChannelManager
+ChannelManager --> ChatChannel
+ChannelManager --> FaqChannel
+ErrorHandler --> ExceptionLogger
+
 @enduml

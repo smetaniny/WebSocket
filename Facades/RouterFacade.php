@@ -6,7 +6,7 @@ namespace App\WebSocket\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \App\WebSocket\Core\WebSocketRouter
+ * @see \App\WebSocket\Router\WebSocketRouter
  * @package App\WebSocket\Facades
  * @author Smetanin Sergey
  * @version 1.0.0
